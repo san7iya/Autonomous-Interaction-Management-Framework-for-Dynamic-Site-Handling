@@ -213,6 +213,20 @@ class StepVerifierTests(unittest.TestCase):
 
         self.assertEqual(verdict.status, "unverified")
 
+    def test_url_change_with_only_tracking_params_is_not_verified(self):
+        # A URL that only gained tracking noise is the same page, not a step
+        # that did something.
+        result = ActionResult(
+            success=True,
+            action="x",
+            url_before="https://a.test/?ref=abc",
+            url_after="https://a.test/?utm_source=x",
+        )
+        verdict = self.verifier.verify(AgentAction(action="click"), result, "view_aaa", "view_aaa")
+
+        self.assertEqual(verdict.status, "unverified")
+        self.assertEqual(verdict.evidence, "no_observable_change")
+
     def test_extract_is_judged_on_its_value(self):
         got = self.verifier.verify(AgentAction(action="extract"), self._result(value=" 19.99 "))
         empty = self.verifier.verify(AgentAction(action="extract"), self._result(value="   "))

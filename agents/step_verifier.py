@@ -1,6 +1,7 @@
 from typing import Optional
 
 from memory.history import StepVerdict
+from memory.signature import normalize_url
 from models.action_models import AgentAction
 from models.orchestration_models import ActionResult
 
@@ -95,8 +96,6 @@ class StepVerifier:
 
     @staticmethod
     def _url_changed(result: ActionResult) -> bool:
-        return bool(
-            result.url_before
-            and result.url_after
-            and result.url_before != result.url_after
-        )
+        if not (result.url_before and result.url_after):
+            return False
+        return normalize_url(result.url_before) != normalize_url(result.url_after)
