@@ -318,3 +318,7 @@ class MemoryState:
         if self.extracted_data:
             context += f"\n\nExtracted Data So Far:\n{self.extracted_data}"
         return context
+
+    def close(self):
+        """Release the navigation graph's SQLite connection."""
+        self.graph.close()

@@ -462,3 +462,4 @@ class ReasoningAgent:
             else:
                 await self._emit_log("Task execution finished.")
             await self.browser_controller.close_browser()
+            self.memory.close()
